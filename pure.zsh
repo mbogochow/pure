@@ -174,7 +174,12 @@ prompt_pure_precmd() {
 	prompt_pure_set_title 'expand-prompt' '%~'
 
 	# preform async git dirty check and fetch
-	prompt_pure_async_tasks
+  # In Cygwin, zpty does not close properly so don't perform async tasks.
+  # https://github.com/sindresorhus/pure/issues/141
+  case "$(uname -s))" in
+    CYGWIN*) ;;
+    *) prompt_pure_async_tasks
+  esac
 
 	# store name of virtualenv in psvar if activated
 	psvar[12]=
